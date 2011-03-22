@@ -41,7 +41,7 @@ CPLogRegister(CPLogConsole);
 - (void)applyTemplate:(id)sender
 {
     var args = nil,
-            template = [theTemplate stringValue];
+        template = [theTemplate stringValue];
 
     eval("args = " + [theCode stringValue]);
 

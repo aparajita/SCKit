@@ -46,70 +46,70 @@ SCBorderViewModeImages = 0;
 SCBorderViewModeShadow = 1;
 
 var SCBorderViewPathSuffixes = [
-    @"TopLeft.png",
-    @"Top.png",
-    @"TopRight.png",
-    @"Left.png",
-    @"Center.png",
-    @"Right.png",
-    @"BottomLeft.png",
-    @"Bottom.png",
-    @"BottomRight.png"
-];
+        @"TopLeft.png",
+        @"Top.png",
+        @"TopRight.png",
+        @"Left.png",
+        @"Center.png",
+        @"Right.png",
+        @"BottomLeft.png",
+        @"Bottom.png",
+        @"BottomRight.png"
+    ];
 
 
 @implementation SCBorderView : CPView
 {
     SCBorderViewMode    _mode   @accessors(readonly, getter=mode)
-    
+
     CPView              _contentView    @accessors(readonly, getter=contentView);
-                        
+
     float               _borderWidth    @accessors(readonly, getter=borderWidth);
     CPColor             _borderColor    @accessors(readonly, getter=borderColor);
-                        
+
     CGSize              _shadowOffset   @accessors(readonly, getter=shadowOffset);
     float               _shadowBlur     @accessors(readonly, getter=shadowBlur);
     CPColor             _shadowColor    @accessors(readonly, getter=shadowColor);
-                        
+
     float               _leftInset      @accessors(readonly, getter=leftInset);
     float               _rightInset     @accessors(readonly, getter=rightInset);
     float               _topInset       @accessors(readonly, getter=topInset);
     float               _bottomInset    @accessors(readonly, getter=bottomInset);
 }
 
-+ (id)borderViewEnclosingView:(CPView)aView 
++ (id)borderViewEnclosingView:(CPView)aView
       width:(float)aWidth
       color:(CPColor)aColor
-      imagePath:(CPString)anImagePath 
-      sizes:(CPArray)sizes 
+      imagePath:(CPString)anImagePath
+      sizes:(CPArray)sizes
       insets:(CPArray)insets
 {
     return [[SCBorderView alloc] initWithView:aView width:aWidth color:aColor imagePath:anImagePath sizes:sizes insets:insets];
 }
 
-+ (id)borderViewEnclosingView:(CPView)aView 
++ (id)borderViewEnclosingView:(CPView)aView
       width:(float)aWidth
       color:(CPColor)aColor
-      shadowOffset:(CGSize)anOffset 
+      shadowOffset:(CGSize)anOffset
       shadowBlur:(float)aBlur
       shadowColor:(CPColor)aShadowColor
 {
     return [[SCBorderView alloc] initWithView:aView width:aWidth color:aColor shadowOffset:anOffset shadowBlur:aBlur shadowColor:aShadowColor];
 }
 
-- (id)initWithView:(CPView)aView 
+- (id)initWithView:(CPView)aView
       width:(float)aWidth
       color:(CPColor)aColor
-      imagePath:(CPString)anImagePath 
-      sizes:(CPArray)sizes 
+      imagePath:(CPString)anImagePath
+      sizes:(CPArray)sizes
       insets:(CPArray)insets
 {
     self = [super initWithFrame:[aView frame]];
-    
+
     if (self)
     {
         _mode         = SCBorderViewModeImages;
-        
+
         _borderWidth  = aWidth;
         _borderColor  = aColor == nil ? [CPColor grayColor] : aColor;
 
@@ -121,18 +121,18 @@ var SCBorderViewPathSuffixes = [
         _rightInset   = insets[1] + _borderWidth;
         _bottomInset  = insets[2] + _borderWidth;
         _leftInset    = insets[3] + _borderWidth;
-        
+
         var path = [[CPBundle mainBundle] pathForResource:anImagePath],
             slices = [CPArray arrayWithCapacity:9];
-        
+
         for (var i = 0; i < 9; ++i)
         {
             var size = [sizes objectAtIndex:i],
                 image = nil;
-            
+
             if (size != nil)
                 image = [[CPImage alloc] initWithContentsOfFile:path + [SCBorderViewPathSuffixes objectAtIndex:i] size:size];
-                
+
             [slices replaceObjectAtIndex:i withObject:image];
         }
 
@@ -140,29 +140,29 @@ var SCBorderViewPathSuffixes = [
 
         [self _initWithView:aView];
     }
-    
+
     return self;
 }
 
-- (id)initWithView:(CPView)aView 
+- (id)initWithView:(CPView)aView
       width:(float)aWidth
       color:(CPColor)aColor
-      shadowOffset:(CGSize)anOffset 
+      shadowOffset:(CGSize)anOffset
       shadowBlur:(float)aBlur
       shadowColor:(CPColor)aShadowColor
 {
     self = [super initWithFrame:[aView frame]];
-    
+
     if (self)
     {
         _mode         = SCBorderViewModeShadow;
-        
+
         _borderWidth  = aWidth;
-        _borderColor  = aColor == nil ? [CPColor colorWithWhite:190.0/255.0 alpha:1.0] : aColor;
+        _borderColor  = aColor == nil ? [CPColor colorWithWhite:190.0 / 255.0 alpha:1.0] : aColor;
 
         _shadowOffset = anOffset;
         _shadowBlur   = aBlur;
-        _shadowColor  = aShadowColor == nil ? [CPColor colorWithWhite:190.0/255.0 alpha:1.0] : aShadowColor;
+        _shadowColor  = aShadowColor == nil ? [CPColor colorWithWhite:190.0 / 255.0 alpha:1.0] : aShadowColor;
 
         _topInset     = _borderWidth + MAX(_shadowBlur - _shadowOffset.height, 0);
         _rightInset   = _borderWidth + _shadowOffset.width + _shadowBlur;
@@ -171,14 +171,14 @@ var SCBorderViewPathSuffixes = [
 
         [self _initWithView:aView];
     }
-    
+
     return self;
 }
 
 - (void)_initWithView:(CPView)aView
 {
     _contentView = aView;
-    
+
     var size = [self frame].size,
         width = size.width - _leftInset - _rightInset,
         height = size.height - _topInset - _bottomInset,
@@ -186,7 +186,7 @@ var SCBorderViewPathSuffixes = [
 
     [self setHitTests:[_contentView hitTests]];
     [self setAutoresizingMask:[_contentView autoresizingMask]];
-    
+
     [_contentView removeFromSuperview];
     [self addSubview:_contentView];
     [_contentView setFrame:CGRectMake(_leftInset, _topInset, width, height)]
@@ -205,9 +205,9 @@ var SCBorderViewPathSuffixes = [
 
 - (CGRect)frameForContentFrame:(CGRect)aFrame
 {
-    return CGRectMake(CGRectGetMinX(aFrame) - _leftInset, 
-                      CGRectGetMinY(aFrame) - _topInset, 
-                      CGRectGetWidth(aFrame) + _leftInset + _rightInset, 
+    return CGRectMake(CGRectGetMinX(aFrame) - _leftInset,
+                      CGRectGetMinY(aFrame) - _topInset,
+                      CGRectGetWidth(aFrame) + _leftInset + _rightInset,
                       CGRectGetHeight(aFrame) + _topInset + _bottomInset);
 }
 
@@ -219,14 +219,14 @@ var SCBorderViewPathSuffixes = [
 - (void)drawRect:(CGRect)aRect
 {
     [super drawRect:aRect];
-    
+
     if (_mode == SCBorderViewModeShadow)
     {
-        var context = [[CPGraphicsContext currentContext] graphicsPort];
+        var context = [[CPGraphicsContext currentContext] graphicsPort],
             frame = [_contentView frame],
             fillRect = CGRectInset(frame, -_borderWidth, -_borderWidth),
             strokeRect = CGRectInset(frame, -_borderWidth * 0.5, -_borderWidth * 0.5);
-        
+
         if (_shadowBlur > 0)
         {
             CGContextSaveGState(context);
@@ -235,7 +235,7 @@ var SCBorderViewPathSuffixes = [
             CGContextFillRect(context, fillRect);
             CGContextRestoreGState(context);
         }
-        
+
         if (_borderWidth > 0)
         {
             CGContextSetLineWidth(context, _borderWidth);

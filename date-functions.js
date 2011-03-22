@@ -1,6 +1,6 @@
 /*
  * http://code.google.com/p/flexible-js-formatting/
- * 
+ *
  * Copyright (C) 2004 Baron Schwartz <baron at sequent dot org>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy

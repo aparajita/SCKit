@@ -26,10 +26,10 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
     if (_DOMTextElement)
         _DOMTextElement.innerHTML = _text;
-    
+
     if (_DOMTextShadowElement)
         _DOMTextShadowElement.innerHTML = "";
 }
