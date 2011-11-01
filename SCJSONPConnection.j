@@ -37,11 +37,6 @@
     return [[[self class] alloc] initWithRequest:aRequest callback:callbackParameter delegate:aDelegate identifier:anIdentifier startImmediately:YES];
 }
 
-+ (CPString)errorMessageForError:(id)error
-{
-    return [SCConnectionUtils errorMessageForError:error];
-}
-
 - (id)initWithRequest:(CPURLRequest)aRequest callback:(CPString)callbackParameter delegate:(id)aDelegate identifier:(CPString)anIdentifier startImmediately:(BOOL)shouldStartImmediately
 {
     var self = [super initWithRequest:aRequest callback:callbackParameter delegate:self startImmediately:NO];
@@ -131,7 +126,7 @@
 
     [alert setDelegate:aDelegate];
     [alert setTitle:@"Connection Failed"];
-    [alert setMessageText:[self errorMessageWithError:error]];
+    [alert setMessageText:[self errorMessageForError:error]];
     [alert addButtonWithTitle:@"OK"];
     [alert runModal];
 }
@@ -149,6 +144,11 @@
         error = -1;
 
     [self _connection:connection didFailWithError:error];
+}
+
+- (CPString)errorMessageForError:(id)error
+{
+    return [SCConnectionUtils errorMessageForError:error];
 }
 
 @end

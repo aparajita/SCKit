@@ -28,11 +28,6 @@
     return [[self alloc] initWithRequest:aRequest delegate:aDelegate identifier:anIdentifier startImmediately:YES];
 }
 
-+ (CPString)errorMessageForError:(id)error
-{
-    return [SCConnectionUtils errorMessageForError:error];
-}
-
 - (id)initWithRequest:(CPURLRequest)aRequest delegate:(id)aDelegate startImmediately:(BOOL)shouldStartImmediately
 {
     var self = [super initWithRequest:aRequest delegate:self startImmediately:NO];
@@ -165,6 +160,11 @@
         error = -1;
 
     [self _connection:connection didFailWithError:error];
+}
+
+- (CPString)errorMessageForError:(id)error
+{
+    return [SCConnectionUtils errorMessageForError:error];
 }
 
 @end
