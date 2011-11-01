@@ -1,7 +1,10 @@
 /*
- * _SCImageAndStyledTextView.j
+ * SCKit.j
+ * SCKit
  *
- * Created by Aparajita Fishman.
+ * Created by aparajita on October 27, 2011.
+ *
+ * Copyright 2011, Victory-Heart Productions. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,27 +21,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-@import <AppKit/_CPImageAndTextView.j>
-
-
-/*!
-    The standard _CPImageAndTextView used by Cappuccino strips all html tags
-    from the text. This subclass, used by \ref SCStyledTextField, allows
-    you to use full styled html in a text field.
-    
-    Ordinarily you will never need to interact with this class directly.
-*/
-@implementation _SCImageAndStyledTextView : _CPImageAndTextView
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-
-    if (_DOMTextElement)
-        _DOMTextElement.innerHTML = _text;
-
-    if (_DOMTextShadowElement)
-        _DOMTextShadowElement.innerHTML = "";
-}
-
-@end
+@import "SCKitClass.j"
+@import "SCBorderView.j"
+@import "SCJSONPConnection.j"
+@import "SCString.j"
+@import "SCStyledTextField.j"
+@import "SCURLConnection.j"

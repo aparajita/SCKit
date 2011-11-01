@@ -7,6 +7,8 @@
 
 @import <Foundation/CPJSONPConnection.j>
 
+@import "SCConnectionUtils.j"
+
 
 @implementation SCJSONPConnection : CPJSONPConnection
 {
@@ -15,9 +17,19 @@
     id          receivedData  @accessors(readonly);
 }
 
++ (SCJSONPConnection)connectionWithRequest:(CPURLRequest)aRequest delegate:(id)aDelegate
+{
+    return [[[self class] alloc] initWithRequest:aRequest callback:@"callback" delegate:aDelegate identifier:@"" startImmediately:YES];
+}
+
 + (SCJSONPConnection)connectionWithRequest:(CPURLRequest)aRequest callback:(CPString)callbackParameter delegate:(id)aDelegate
 {
     return [[[self class] alloc] initWithRequest:aRequest callback:callbackParameter delegate:aDelegate identifier:@"" startImmediately:YES];
+}
+
++ (SCJSONPConnection)connectionWithRequest:(CPURLRequest)aRequest delegate:(id)aDelegate identifier:(CPString)anIdentifier
+{
+    return [[[self class] alloc] initWithRequest:aRequest callback:@"callback" delegate:aDelegate identifier:anIdentifier startImmediately:YES];
 }
 
 + (SCJSONPConnection)connectionWithRequest:(CPURLRequest)aRequest callback:(CPString)callbackParameter delegate:(id)aDelegate identifier:(CPString)anIdentifier
@@ -25,29 +37,14 @@
     return [[[self class] alloc] initWithRequest:aRequest callback:callbackParameter delegate:aDelegate identifier:anIdentifier startImmediately:YES];
 }
 
-- (id)initWithRequest:(CPURLRequest)aRequest callback:(CPString)aString delegate:(id)aDelegate
++ (CPString)errorMessageForError:(id)error
 {
-    return [self initWithRequest:aRequest callback:aString delegate:aDelegate identifier:@"" startImmediately:NO];
+    return [SCConnectionUtils errorMessageForError:error];
 }
 
-- (id)initWithRequest:(CPURLRequest)aRequest callback:(CPString)aString delegate:(id)aDelegate startImmediately:(BOOL)shouldStartImmediately
+- (id)initWithRequest:(CPURLRequest)aRequest callback:(CPString)callbackParameter delegate:(id)aDelegate identifier:(CPString)anIdentifier startImmediately:(BOOL)shouldStartImmediately
 {
-    return [self initWithRequest:aRequest callback:aString delegate:aDelegate identifier:@"" startImmediately:shouldStartImmediately];
-}
-
-- (id)initWithRequest:(CPURLRequest)aRequest callback:(CPString)aString delegate:(id)aDelegate startImmediately:(BOOL)shouldStartImmediately
-{
-    var self = [super initWithRequest:aRequest callback:aString delegate:self startImmediately:NO];
-
-    if (self)
-        [self _initWithIdentifier:@"" delegate:aDelegate startImmediately:shouldStartImmediately];
-
-    return self;
-}
-
-- (id)initWithRequest:(CPURLRequest)aRequest callback:(CPString)aString delegate:(id)aDelegate identifier:(CPString)anIdentifier startImmediately:(BOOL)shouldStartImmediately
-{
-    var self = [super initWithRequest:aRequest callback:aString delegate:self startImmediately:NO];
+    var self = [super initWithRequest:aRequest callback:callbackParameter delegate:self startImmediately:NO];
 
     if (self)
         [self _initWithIdentifier:anIdentifier delegate:aDelegate startImmediately:shouldStartImmediately];
@@ -130,37 +127,11 @@
 
 - (void)alertFailureWithError:(id)error delegate:(id)aDelegate
 {
-    var alert = [[CPAlert alloc] init],
-        type = typeof(error),
-        message;
-
-    if (type === "string")
-        message = error;
-    else if (type === "number")
-    {
-        switch (error)
-        {
-            case -1:  // Bad json data, probably an error message
-            case 500:
-                message = @"An internal error occurred on the server. Please notify the site administrator.";
-                break;
-
-            case 502:  // Bad Gateway
-            case 503:  // Service Unavailable
-            case 504:  // Gateway Timeout
-                message = @"The server is not responding. If this problem continues please contact the site administrator.";
-                break;
-
-            default:
-                message = [CPString stringWithFormat:@"An error occurred (%d) while trying to connect with the server. Please try again.", responseStatus];
-        }
-    }
-    else
-        message = error.message || @"An error occurred while trying to connect with the server. Please try again.";
+    var alert = [[CPAlert alloc] init];
 
     [alert setDelegate:aDelegate];
     [alert setTitle:@"Connection Failed"];
-    [alert setMessageText:message];
+    [alert setMessageText:[self errorMessageWithError:error]];
     [alert addButtonWithTitle:@"OK"];
     [alert runModal];
 }
@@ -179,3 +150,5 @@
 
     [self _connection:connection didFailWithError:error];
 }
+
+@end

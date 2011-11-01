@@ -34,6 +34,9 @@ CPLogRegister(CPLogConsole);
     [theCode setValue:[CPColor blackColor] forThemeAttribute:@"text-color"];
     [theTemplate setValue:[CPColor blackColor] forThemeAttribute:@"text-color"];
     [theResult setValue:[CPColor blackColor] forThemeAttribute:@"text-color"];
+    
+    [theCode setStringValue:@"{name:\"pizza\", qty:0}"];
+    [theTemplate setStringValue:@"There |qty|is|are| #qty#no#${qty}# ${name}|qty||s|#qty#!##"];
 
     [theWindow setFullPlatformWindow:YES];
 }

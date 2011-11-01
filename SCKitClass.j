@@ -1,7 +1,10 @@
 /*
- * _SCImageAndStyledTextView.j
+ * SCKitClass.j
+ * SCKit
  *
- * Created by Aparajita Fishman.
+ * Created by aparajita on October 27, 2011.
+ *
+ * Copyright 2011, Victory-Heart Productions. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,27 +21,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-@import <AppKit/_CPImageAndTextView.j>
+@import <Foundation/CPObject.j>
 
 
 /*!
-    The standard _CPImageAndTextView used by Cappuccino strips all html tags
-    from the text. This subclass, used by \ref SCStyledTextField, allows
-    you to use full styled html in a text field.
-    
-    Ordinarily you will never need to interact with this class directly.
+    This class is defined to make it easier to find the bundle,
+    for example to get an image from the framework like this:
+
+    @code
+    var path = [[CPBundle bundleForClass:SCKit] pathForResource:@"email-action.png"];
+    @endcode
+
+    You can also use [SCKit version] to get the current version.
 */
-@implementation _SCImageAndStyledTextView : _CPImageAndTextView
+@implementation SCKit : CPObject
 
-- (void)layoutSubviews
++ (CPString)version
 {
-    [super layoutSubviews];
+    var bundle = [CPBundle bundleForClass:[self class]];
 
-    if (_DOMTextElement)
-        _DOMTextElement.innerHTML = _text;
-
-    if (_DOMTextShadowElement)
-        _DOMTextShadowElement.innerHTML = "";
+    return [bundle objectForInfoDictionaryKey:@"CPBundleVersion"];
 }
 
 @end

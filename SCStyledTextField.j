@@ -48,7 +48,7 @@
     for (var i = 0; i < args.length; ++i)
         args[i] = encodeHTMLComponent(args[i]);
 
-    [self setStringValue:SCKit.stringWithTemplate(template, SCString.DefaultDelimiters, args)];
+    [self setStringValue:[SCString stringWithTemplate:template args:args]];
 }
 
 - (void)setEncodedStringValueWithTemplate:(CPString)template delimiters:(CPString)delimiters, ...
@@ -58,7 +58,7 @@
     for (var i = 0; i < args.length; ++i)
         args[i] = encodeHTMLComponent(args[i]);
 
-    [self setStringValue:SCKit.stringWithTemplate(template, delimiters, args)];
+    [self setStringValue:[SCString stringWithTemplate:template delimiters:delimiters args:args]];
 }
 
 @end

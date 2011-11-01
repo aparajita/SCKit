@@ -5,12 +5,14 @@
  *  Copyright Victory-Heart Productions 2010. All rights reserved.
 */
 
+@import <Foundation/CPArray.j>
+@import <Foundation/CPDictionary.j>
 @import <Foundation/CPString.j>
 
 
 @implementation SCString : CPObject
 
-/*
+/*!
     A string template engine.
 
     Long ago I was poking through the resources used by the Macintosh Finder and saw strings like this:
@@ -86,7 +88,7 @@
 
     If the argument is not a date, the equivalent of:
 
-        [SCKit stringWithFormat:format, [argsDict objectForKey:key]]
+        [CPString stringWithFormat:format, [argsDict objectForKey:key]]
 
     is performed.
 
@@ -97,7 +99,7 @@
 
     is the same as:
 
-        [SCKit stringWithFormat:@"%.2f", [argsDict objectForKey:@"total"]]
+        [CPString stringWithFormat:@"%.2f", [argsDict objectForKey:@"total"]]
         [argsDict objectForKey:@"date"].dateFormat("F j, Y")
 
     In addition to a format, you may also add a default value after a vertical bar:
@@ -153,26 +155,26 @@
     composer:
 
        var args = {composer:song.composer, date:song.dateComposed},
-           text = [SCKit stringWithTemplate:@"Composed by $composer on $dateComposed", args]
+           text = [SCString stringWithTemplate:@"Composed by $composer on $dateComposed", args]
 
        RESULT: "Composed by Pat Metheny on 2005-03-30"
 
     Simple enough. Now we want to format the date to be a little more friendly:
 
-       text = [SCKit stringWithTemplate:@"Composed by $composer on ${dateComposed:F j, Y}", args];
+       text = [SCString stringWithTemplate:@"Composed by $composer on ${dateComposed:F j, Y}", args];
 
        RESULT: "Composed by Pat Metheny on March 30, 2005"
 
     That's better. Now we want to translate it into French:
 
-       text = [SCKit stringWithTemplate:@"Composée par $composer le ${dateComposed:j F, Y}", args];
+       text = [SCString stringWithTemplate:@"Composée par $composer le ${dateComposed:j F, Y}", args];
 
        RESULT: "Composée par Pat Metheny le 30 March, 2005"
 
     Now we realize that that we may not know the composition date, in which case the date is nil.
     So we use the default value:
 
-       text = [SCKit stringWithTemplate:@"Composed by $composer ${dateComposed:\\o\\n F j, Y|(date unknown)}", args];
+       text = [SCString stringWithTemplate:@"Composed by $composer ${dateComposed:\\o\\n F j, Y|(date unknown)}", args];
 
        RESULT: "Composed by Pat Metheny (date unknown)"  # if dateComposed is nil
 
@@ -183,7 +185,7 @@
 
        var args = {composer:song.composer, date:song.dateComposed, translated:song.hasTranslation},
            template = @"Composed #translated##and translated #by $composer ${dateComposed:\o\n F j, Y|(date unknown)}",
-           text = [SCKit stringWithTemplate:template, args];
+           text = [SCString stringWithTemplate:template, args];
 
     Note that we are using the zero/non-zero selector as a false/true selector in this case.
 
@@ -191,7 +193,7 @@
     arguments:
 
         var template = @"Composed #0##and translated #by $1 ${2:\o\n F j, Y|(date unknown)}",
-            text = [SCKit stringWithTemplate:template, song.hasTranslation, song.composer, song.dateComposed];
+            text = [SCString stringWithTemplate:template, song.hasTranslation, song.composer, song.dateComposed];
 
     Finally, we find that sometimes we don't know the exact date of composition, but we know the month
     or year. In that case we have a text date like "February 1980". So our logic ends up like this:
@@ -211,7 +213,7 @@
 
        var template = @"Composed #translated##and translated #by $composer " +
                       @"#textDate#${dateComposed:\o\n F j, Y|(date unknown)}#$textDate#",
-           text = [SCKit stringWithTemplate:template, args];
+           text = [SCString stringWithTemplate:template, args];
 
     Now let's see how the singular/plural selector works. Returning to a variation on the first example at the top
     of this doc, we want to encode these three variations into a single template:
@@ -223,7 +225,7 @@
     Here is the template:
 
        var template = @"You #count#don't ##have #count#any#|count|only ||$count# message|count||s|.",
-           text = [SCKit stringWithTemplate:template, {count:messageCount};
+           text = [SCString stringWithTemplate:template, {count:messageCount};
 
     Let's break down the pattern:
 
@@ -268,24 +270,35 @@
 
     Hopefully that should be enough to give you an idea how to use stringWithTemplate. Enjoy!
 */
+
 + (id)stringWithTemplate:(CPString)template, ...
 {
-    var args = [template, SCKit.TemplateDefaultDelimiters];
+    var args = [template, SCStringImpl.TemplateDefaultDelimiters];
 
-    return SCKit.stringWithTemplate.apply(self, args.concat(Array.prototype.slice.call(arguments, 3)));
+    return SCStringImpl.stringWithTemplate.apply(self, args.concat(Array.prototype.slice.call(arguments, 3)));
+}
+
++ (id)stringWithTemplate:(CPString)template args:(CPArray)args
+{
+    return SCStringImpl.stringWithTemplate.apply(self, [template, SCStringImpl.TemplateDefaultDelimiters].concat(args));
 }
 
 + (id)stringWithTemplate:(CPString)template delimiters:(CPString)delimiters, ...
 {
     var args = [template, delimiters];
 
-    return SCKit.stringWithTemplate.apply(self, args.concat(Array.prototype.slice.call(arguments, 4)));
+    return SCStringImpl.stringWithTemplate.apply(self, args.concat(Array.prototype.slice.call(arguments, 4)));
+}
+
++ (id)stringWithTemplate:(CPString)template delimiters:(CPString)delimiters args:(CPArray)args
+{
+    return SCStringImpl.stringWithTemplate.apply(self, [template, delimiters].concat(args));
 }
 
 @end
 
 
-SCKit = (function() {
+SCStringImpl = (function() {
 
     var my = {},
 
