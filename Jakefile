@@ -2,23 +2,11 @@
  * Jakefile
  * SCKit
  *
- * Created by aparajita on October 27, 2011.
+ * Created by Aparajita Fishman.
+ * Copyright (c) 2010, Victory-Heart Productions.
  *
- * Copyright 2011, Victory-Heart Productions. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * Released under the MIT license:
+ * http://www.opensource.org/licenses/MIT
  */
 
 //===========================================================
@@ -127,6 +115,16 @@ task ("install-symlinks", ["debug", "release"], function()
     install("symlink");
 });
 
+task("test", ["release"], function()
+{
+    var tests = new FileList('Tests/**/*Test.j'),
+        cmd = ["ojtest"].concat(tests.items()),
+        code = OS.system(cmd.map(OS.enquote).join(" "));
+
+    if (code !== 0)
+        OS.exit(code);
+});
+
 task ("help", function()
 {
     var app = JAKE.application().name();
@@ -140,6 +138,7 @@ task ("help", function()
     describeTask(app, "all", "Builds a debug and release version");
     describeTask(app, "install", "Builds a debug and release version, then installs in " + packageFrameworksPath);
     describeTask(app, "install-symlinks", "Builds a debug and release version, then symlinks the built versions into " + packageFrameworksPath);
+    describeTask(app, "test", "Builds a release version, then runs all *Test.j files in Tests/");
     describeTask(app, "clean", "Removes the intermediate build files");
     describeTask(app, "clobber", "Removes the intermediate build files and the installed frameworks");
 

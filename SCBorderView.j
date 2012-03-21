@@ -1,23 +1,12 @@
 /*
  * SCBorderView.j
- * AppKit
+ * SCKit
  *
  * Created by Aparajita Fishman.
- * Copyright 2010, Aparajita Fishman
+ * Copyright (c) 2010, Aparajita Fishman.
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * Released under the MIT license:
+ * http://www.opensource.org/licenses/MIT
  */
 
 @import <Foundation/Foundation.j>
@@ -29,7 +18,7 @@
 
 
 /*!
-    @ingroup appkit
+    @ingroup sckit
 */
 
 SCBorderViewImageTopLeft     = 0;
@@ -137,7 +126,6 @@ var SCBorderViewPathSuffixes = [
         }
 
         [self setBackgroundColor:[CPColor colorWithPatternImage:[[CPNinePartImage alloc] initWithImageSlices:slices]]];
-
         [self _initWithView:aView];
     }
 

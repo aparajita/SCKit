@@ -1,8 +1,12 @@
 /*
- *  SCStyledTextField.j
+ * SCStyledTextField.j
+ * SCKit
  *
- *  Created by Aparajita on 8/6/10.
- *  Copyright Victory-Heart Productions 2010. All rights reserved.
+ * Created by Aparajita Fishman.
+ * Copyright (c) 2010, Victory-Heart Productions.
+ *
+ * Released under the MIT license:
+ * http://www.opensource.org/licenses/MIT
 */
 
 @import <AppKit/CPTextField.j>

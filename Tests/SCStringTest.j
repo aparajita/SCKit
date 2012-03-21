@@ -1,11 +1,21 @@
-#!/usr/bin/env objj
+/*
+ * SCStringTest.j
+ * SCKit
+ *
+ * Created by Aparajita Fishman.
+ * Copyright (c) 2010, Victory-Heart Productions.
+ *
+ * Released under the MIT license:
+ * http://www.opensource.org/licenses/MIT
+ */
 
 @import <Foundation/CPBundle.j>
+@import <AppKit/AppKit.j>
 @import <SCKit/SCString.j>
 
 function _testValues(self, template, values, expectedString)
 {
-    var actualString = [SCString stringWithTemplate:template, values];        
+    var actualString = [SCString stringWithTemplate:template, values];
 
     [self assertTrue:(expectedString === actualString)
              message:"stringWithTemplate: expected:" + expectedString + " actual:" + actualString];
@@ -34,7 +44,7 @@ require(dateFunctions);
 {
     var expectedString = @"There are 7 pizzas",
         template = @"There are $qty $item";
-        
+
     _testValues(self, template, {qty:7, item:"pizzas"}, expectedString);
 }
 
@@ -51,7 +61,7 @@ require(dateFunctions);
     var expectedString = @"There are no pizzas",
         template = @"There are #qty#no#$qty# $item",
         values = {qty:0, item:"pizzas"};
-        
+
     _testValues(self, template, values, expectedString);
 
     expectedString = @"There are 7 pizzas";
@@ -66,7 +76,7 @@ require(dateFunctions);
         values = {qty:1, item:"pizza"};
 
     _testValues(self, template, values, expectedString);
-             
+
     expectedString = @"There are 7 pizzas";
     values.qty = 7;
     _testValues(self, template, values, expectedString);
@@ -77,17 +87,17 @@ require(dateFunctions);
     var expectedString = @"There are 7 pizzas",
         template = @"There are ${qty:d} pizzas",
         values = {qty:7.07};
-        
+
     _testValues(self, template, values, expectedString);
-             
+
     expectedString = @"There are 7.1 pizzas";
     template = @"There are ${qty:.1f} pizzas";
     _testValues(self, template, values, expectedString);
-             
+
     expectedString = @"There are 7.07 pizzas";
     template = @"There are ${qty:.2f} pizzas";
     _testValues(self, template, values, expectedString);
-                 
+
     expectedString = @"There are 0.270 pizzas";
     template = @"There are ${qty:0.3f} pizzas";
     values.qty = 0.27;
@@ -99,7 +109,7 @@ require(dateFunctions);
     var expectedString = @"Date (YYYY-MM-DD): 1964-04-13",
         template = @"Date (YYYY-MM-DD): ${date:Y-m-d}",
         values = {date: new Date(1964, 3, 13)};
-        
+
     _testValues(self, template, values, expectedString);
 
     expectedString = @"Date (Weekday, Month Date, Year): Monday, April 13, 1964",
@@ -109,14 +119,14 @@ require(dateFunctions);
 
 @end
 
-// 
+//
 // var template = @"There |qty|is|are| #qty#no#${qty}# ${name}|qty||s|#qty#!##",
 //     values = {name:"pizza", qty:0};
-// 
+//
 // print([SCString stringWithTemplate:template, values]);
 // values.qty = 1;
 // print([SCString stringWithTemplate:template, values]);
 // values.qty = 7;
 // print([SCString stringWithTemplate:template, values]);
-// 
+//
 // print([SCString stringWithTemplate:@"The date is ${date:j F, Y}", {date:new Date()}]);
