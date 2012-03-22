@@ -1,6 +1,9 @@
 # SCKit
 
-SCKit is a collection of utility classes.
+SCKit is a collection of utility classes for [Cappuccino](https://github.com/cappuccino/cappuccino).
+
+#### SCString
+An awesome string template engine. Handles both simple and extremely complex string formatting needs.
 
 #### SCURLConnection
 A drop-in replacement for CPURLConnection that is much easier to use.
@@ -10,9 +13,6 @@ A drop-in replacement for CPJSONPConnection that is much easier to use.
 
 #### SCConnectionUtils
 A set of utilities for dealing with connection errors. Used by SCURLConnection and SCJSONPConnection.
-
-#### SCString
-An awesome string template engine. Handles both simple and extremely complex string formatting needs.
 
 #### SCStyledTextField
 A drop-in replacement for CPTextField that allows you to format the output with html tags in the value.
