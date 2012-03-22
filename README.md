@@ -20,6 +20,9 @@ A drop-in replacement for CPTextField that allows you to format the output with 
 #### SCBorderView
 To be documented.
 
+## Usage
+To see what build options are available, use `jake help`.
+
 ## Examples
 To see SCString and SCURLConnection in action, do the following:
 
