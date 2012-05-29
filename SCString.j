@@ -348,10 +348,10 @@ SCStringImpl = (function() {
 
     // Default subsection delimiters. The first character delimits zero/non-zero subsections,
     // the second character delimits singular/plural subsections.
-    TemplateDefaultDelimiters = "#|";
+    my.TemplateDefaultDelimiters = "#|";
 
     // Default argument delimiter
-    TemplateDefaultArgDelimiter = "$";
+    my.TemplateDefaultArgDelimiter = "$";
 
     function _selectorReplace(text, selector, delimiter, argsDict)
     {
@@ -495,7 +495,7 @@ SCStringImpl = (function() {
             return "";
 
         if (!delimiters || delimiters.length < 2)
-            delimiters = TemplateDefaultDelimiters;
+            delimiters = my.TemplateDefaultDelimiters;
 
         // Normalize the arguments into a dictionary
         var argsDict = null,
@@ -578,7 +578,7 @@ SCStringImpl = (function() {
                 return _convert([argsDict objectForKey:named], format, defaultValue);
 
             if (escaped)
-                return TemplateDefaultArgDelimiter;
+                return my.TemplateDefaultArgDelimiter;
 
             // FIXME: raise
             return "";

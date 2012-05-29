@@ -30,6 +30,26 @@ var SYS = require("system"),
 */
 var buildDir = ENV["BUILD_PATH"] || ENV["CAPP_BUILD"] || "Build";
 
+/*
+    The list of directories containing Objective-J source
+    that should be compiled by jake. The main framework
+    directory is always checked for Objective-J source,
+    you only need to edit this if you have source in
+    subdirectories. Do NOT include a leading ortrailing slash
+    in the directory name.
+
+    Example:
+
+    var sourceDirs = [
+            "Core",
+            "Modules",
+            "Modules/Foo",
+            "Modules/Bar"
+        ];
+*/
+var sourceDirs = [
+    ];
+
 
  //===========================================================
  //  AUTOMATICALLY GENERATED
@@ -64,7 +84,13 @@ var frameworkTask = framework (productName, function(frameworkTask)
     frameworkTask.setAuthor("Victory-Heart Productions");
     frameworkTask.setEmail("feedback @nospam@ yourcompany.com");
     frameworkTask.setSummary("SCKit");
-    frameworkTask.setSources(new FileList("*.j"));
+
+    var includes = sourceDirs.map(function(dir) { return dir + "/*.j"; }),
+        fileList = new FileList();
+
+    includes.unshift("*.j");
+    fileList.include(includes);
+    frameworkTask.setSources(fileList);
     frameworkTask.setResources(new FileList("Resources/**/*"));
     frameworkTask.setFlattensSources(true);
     frameworkTask.setInfoPlistPath("Info.plist");
