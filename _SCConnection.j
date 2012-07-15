@@ -43,13 +43,13 @@
         [aConnection start];
 }
 
-- (void)connection:(id)connection didReceiveResponse:(CPHTTPURLResponse)response
+- (void)connection:(id)aConnection didReceiveResponse:(CPHTTPURLResponse)response
 {
     responseStatus = [response statusCode];
     receivedData = @"";
 }
 
-- (void)connection:(id)connection didReceiveData:(CPString)data
+- (void)connection:(id)aConnection didReceiveData:(CPString)data
 {
     receivedData += data;
 
@@ -62,16 +62,16 @@
     {
         try
         {
-            [delegate performSelector:selector withObject:connection withObject:data];
+            [delegate performSelector:selector withObject:aConnection withObject:data];
         }
         catch (anException)
         {
-            [self _handleException:anException connection:connection];
+            [self _handleException:anException connection:aConnection];
         }
     }
 }
 
-- (void)connectionDidFinishLoading:(id)connection
+- (void)connectionDidFinishLoading:(id)aConnection
 {
     if (responseStatus == 200)
     {
@@ -81,16 +81,16 @@
         {
             try
             {
-                [delegate performSelector:selector withObject:connection];
+                [delegate performSelector:selector withObject:aConnection];
             }
             catch (anException)
             {
-                [self _handleException:anException connection:connection];
+                [self _handleException:anException connection:aConnection];
             }
         }
     }
     else
-        [self _connection:connection didFailWithError:responseStatus];
+        [self _connection:aConnection didFailWithError:responseStatus];
 }
 
 - (int)responseStatus
@@ -128,25 +128,25 @@
     return [receivedData objectFromJSON];
 }
 
-- (void)connection:(id)connection didFailWithError:(id)error
+- (void)connection:(id)aConnection didFailWithError:(id)error
 {
-    [self _connection:connection didFailWithError:503];  // Service Unavailable
+    [self _connection:aConnection didFailWithError:503];  // Service Unavailable
 }
 
-- (void)_connection:(id)connection didFailWithError:(id)error
+- (void)_connection:(id)aConnection didFailWithError:(id)error
 {
     var selector = CPSelectorFromString(selectorPrefix + @":didFailWithError:");
 
     if ([delegate respondsToSelector:selector])
     {
-        [delegate performSelector:selector withObject:connection withObject:error];
+        [delegate performSelector:selector withObject:aConnection withObject:error];
         return;
     }
 
     [SCConnectionUtils alertFailureWithError:error delegate:nil];
 }
 
-- (void)_handleException:(CPException)aException connection:(id)connection
+- (void)_handleException:(CPException)aException connection:(id)aConnection
 {
     var error,
         type = typeof(anException);
@@ -158,7 +158,7 @@
     else
         error = -1;
 
-    [self _connection:connection didFailWithError:error];
+    [self _connection:aConnection didFailWithError:error];
 }
 
 @end
