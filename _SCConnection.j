@@ -24,7 +24,7 @@
     id          connection;
     id          delegate;
     CPString    selectorPrefix;
-    CPString    receivedData;
+    id          receivedData;
 }
 
 - (void)initWithConnection:(id)aConnection identifier:(CPString)anIdentifier delegate:(id)aDelegate startImmediately:(BOOL)shouldStartImmediately
@@ -32,7 +32,7 @@
     connection = aConnection;
     responseStatus = 200;
     delegate = aDelegate;
-    receivedData = "";
+    receivedData = nil;
 
     if ([anIdentifier length] === 0)
         selectorPrefix = @"connection";
@@ -46,12 +46,20 @@
 - (void)connection:(id)aConnection didReceiveResponse:(CPHTTPURLResponse)response
 {
     responseStatus = [response statusCode];
-    receivedData = @"";
+    receivedData = nil;
 }
 
-- (void)connection:(id)aConnection didReceiveData:(CPString)data
+- (void)connection:(id)aConnection didReceiveData:(id)data
 {
-    receivedData += data;
+    if (typeof(data) === "string")
+    {
+        if (receivedData === nil)
+            receivedData = data;
+        else
+            receivedData += data;
+    }
+    else // assume it's JSON data
+        receivedData = data;
 
     if (responseStatus != 200)
         return;
@@ -125,7 +133,10 @@
 
 - (JSObject)receivedJSONData
 {
-    return [receivedData objectFromJSON];
+    if ([receivedData isKindOfClass:CPString])
+        return [receivedData objectFromJSON];
+    else
+        return receivedData;
 }
 
 - (void)connection:(id)aConnection didFailWithError:(id)error

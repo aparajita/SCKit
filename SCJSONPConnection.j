@@ -17,7 +17,7 @@
 
 /*!
     SCJSONPConnection is a drop-in replacement for CPJSONPConnection which provides
-    more streamlined usage, automates common tasks like accumulating received data,
+    more streamlined usage, automates common tasks like caching received data,
     and deals with some of the more tricky aspects of error handling.
 
     For more details, see the documentation for SCURLConnection.
@@ -60,7 +60,40 @@
 
 - (void)_initWithIdentifier:(CPString)anIdentifier delegate:(id)aDelegate startImmediately:(BOOL)shouldStartImmediately
 {
-    [base initWithIdentifier:anIdentifier delegate:aDelegate startImmediately:shouldStartImmediately];
+    [base initWithConnection:self identifier:anIdentifier delegate:aDelegate startImmediately:shouldStartImmediately];
+}
+
+/*!
+    Returns 200 if the connection succeeded without error, otherwise the response code.
+*/
+- (int)responseStatus
+{
+    return [base responseStatus];
+}
+
+/*!
+    Returns the JSON data received from the connection response. Note that unlike SCURLConnection,
+    this always returns JSON data, since by definition a JSONP connection returns JSON.
+*/
+- (CPString)receivedData
+{
+    return [base receivedData];
+}
+
+/*!
+    Returns the JSON data received from the connection response.
+*/
+- (JSObject)receivedJSONData
+{
+    return [base receivedJSONData];
+}
+
+/*!
+    @ignore
+*/
+- (void)connection:(SCURLConnection)connection didFailWithError:(id)error
+{
+    [base connection:connection didFailWithError:error];
 }
 
 @end
