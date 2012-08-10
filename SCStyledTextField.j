@@ -41,7 +41,8 @@
     var args = Array.prototype.slice.call(arguments, 2);
 
     for (var i = 1; i < args.length; ++i)
-        args[i] = encodeHTMLComponent(args[i]);
+        if (typeof(args[i]) === "string")
+            args[i] = encodeHTMLComponent(args[i]);
 
     [self setStringValue:ObjectiveJ.sprintf.apply(this, args)];
 }
@@ -51,7 +52,8 @@
     var args = Array.prototype.slice.call(arguments, 3);
 
     for (var i = 0; i < args.length; ++i)
-        args[i] = encodeHTMLComponent(args[i]);
+        if (typeof(args[i]) === "string")
+            args[i] = encodeHTMLComponent(args[i]);
 
     [self setStringValue:[SCString stringWithTemplate:template args:args]];
 }
@@ -61,7 +63,8 @@
     var args = Array.prototype.slice.call(arguments, 4);
 
     for (var i = 0; i < args.length; ++i)
-        args[i] = encodeHTMLComponent(args[i]);
+        if (typeof(args[i]) === "string")
+            args[i] = encodeHTMLComponent(args[i]);
 
     [self setStringValue:[SCString stringWithTemplate:template delimiters:delimiters args:args]];
 }
@@ -174,5 +177,5 @@ var DOMFixedWidthSpanElement    = nil,
 
 var encodeHTMLComponent = function(/*String*/ aString)
 {
-    return aString.replace(/&/g,'&amp;').replace(/"/g, '&quot;').replace(/'/g, '&apos;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return aString ? aString.replace(/&/g,'&amp;').replace(/"/g, '&quot;').replace(/'/g, '&apos;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : "";
 }

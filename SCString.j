@@ -396,7 +396,7 @@ SCStringImpl = (function() {
 
         // Get the specified argument, convert to a string
         var arg = [argsDict objectForKey:identifier],
-            type = typeof arg,
+            type = typeof(arg),
             result = nil;
 
         if (selector === 0)
@@ -421,7 +421,9 @@ SCStringImpl = (function() {
                     break;
 
                 case "object":
-                    isZero = arg === nil || (arg.hasOwnProperty("length") && arg.length === 0);
+                    isZero = arg === nil ||
+                             (arg.hasOwnProperty("length") && arg.length === 0) ||
+                             (arg.hasOwnProperty("isa") && [arg isKindOfClass:CPNull]);
                     break;
 
                 default:
@@ -508,12 +510,16 @@ SCStringImpl = (function() {
         {
             var arg = arguments[2];
 
-            if (arg.hasOwnProperty("isa"))
+            if (arg === null || arg === undefined)
+                    argsArray = [null];
+            else if (arg.hasOwnProperty("isa"))
             {
-                if ([arg isKindOfClass:[CPArray class]])
+                if ([arg isKindOfClass:CPArray])
                     argsArray = arg;
-                else if ([arg isKindOfClass:[CPDictionary class]])
+                else if ([arg isKindOfClass:CPDictionary])
                     argsDict = arg;
+                else if ([arg isKindOfClass:CPNull])
+                    argsArray = [null];
             }
             else if (arg.constructor === Array)
                 argsArray = arg;
