@@ -73,16 +73,14 @@
 
 
 var DOMFixedWidthSpanElement    = nil,
-    DOMFlexibleWidthSpanElement = nil,
-    DOMIFrameElement            = nil,
-    DOMIFrameDocument           = nil;
+    DOMFlexibleWidthSpanElement = nil;
 
 
 @implementation SCStyledTextField (Utils)
 
 + (CGSize)sizeOfString:(CPString)aString withFont:(CPFont)aFont forWidth:(float)aWidth
 {
-    if (!DOMIFrameElement)
+    if (!DOMFixedWidthSpanElement)
         [self createDOMElements];
 
     var span;
@@ -95,7 +93,7 @@ var DOMFixedWidthSpanElement    = nil,
         span.style.width = ROUND(aWidth) + "px";
     }
 
-    span.style.font = [(aFont || [CPFont systmeFontOfSize:CPFontCurrentSystemSize]) cssString];
+    span.style.font = [(aFont || [CPFont systemFontOfSize:CPFontCurrentSystemSize]) cssString];
     span.innerHTML = aString;
 
     return CGSizeMake(span.clientWidth, span.clientHeight);
@@ -103,50 +101,27 @@ var DOMFixedWidthSpanElement    = nil,
 
 + (void)createDOMElements
 {
-    var style;
+    var style,
+        bodyElement = [CPPlatform mainBodyElement];
 
-    DOMIFrameElement = document.createElement("iframe");
-    // necessary for Safari caching bug:
-    DOMIFrameElement.name = "iframe_" + FLOOR(RAND() * 10000);
-    DOMIFrameElement.className = "cpdontremove";
-
-    style = DOMIFrameElement.style;
-    style.position = "absolute";
-    style.left = "-100px";
-    style.top = "-100px";
-    style.width = "1px";
-    style.height = "1px";
-    style.borderWidth = "0px";
-    style.overflow = "hidden";
-    style.zIndex = 100000000000;
-
-    var bodyElement = [CPPlatform mainBodyElement];
-
-    bodyElement.appendChild(DOMIFrameElement);
-
-    DOMIFrameDocument = (DOMIFrameElement.contentDocument || DOMIFrameElement.contentWindow.document);
-    DOMIFrameDocument.write('<!DOCTYPE html><head></head><body></body></html>');
-    DOMIFrameDocument.close();
-
-    // IE needs this wide <div> to prevent unwanted text wrapping:
-    var DOMDivElement = DOMIFrameDocument.createElement("div");
-    DOMDivElement.style.position = "absolute";
-    DOMDivElement.style.width = "100000px";
-
-    DOMIFrameDocument.body.appendChild(DOMDivElement);
-
-    DOMFlexibleWidthSpanElement = DOMIFrameDocument.createElement("span");
+    DOMFlexibleWidthSpanElement = document.createElement("span");
+    DOMFlexibleWidthSpanElement.className = "cpdontremove";
     style = DOMFlexibleWidthSpanElement.style;
     style.position = "absolute";
+    style.left = "-100000px";
+    style.zIndex = -100000;
     style.visibility = "visible";
     style.padding = "0px";
     style.margin = "0px";
     style.whiteSpace = "pre";
 
-    DOMFixedWidthSpanElement = DOMIFrameDocument.createElement("span");
+    DOMFixedWidthSpanElement = document.createElement("span");
+    DOMFixedWidthSpanElement.className = "cpdontremove";
     style = DOMFixedWidthSpanElement.style;
     style.display = "block";
     style.position = "absolute";
+    style.left = "-100000px";
+    style.zIndex = -10000;
     style.visibility = "visible";
     style.padding = "0px";
     style.margin = "0px";
@@ -167,10 +142,9 @@ var DOMFixedWidthSpanElement    = nil,
         style.whiteSpace = "pre";
     }
 
-    DOMDivElement.appendChild(DOMFlexibleWidthSpanElement);
-    DOMDivElement.appendChild(DOMFixedWidthSpanElement);
+    bodyElement.appendChild(DOMFlexibleWidthSpanElement);
+    bodyElement.appendChild(DOMFixedWidthSpanElement);
 }
-
 
 @end
 
