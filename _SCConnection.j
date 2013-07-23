@@ -10,6 +10,8 @@
 */
 
 @import <Foundation/CPObject.j>
+@import <Foundation/CPString.j>
+@import <Foundation/CPURLResponse.j>
 
 @import "SCConnectionUtils.j"
 
@@ -157,7 +159,7 @@
     [SCConnectionUtils alertFailureWithError:error delegate:nil];
 }
 
-- (void)_handleException:(CPException)aException connection:(id)aConnection
+- (void)_handleException:(CPException)anException connection:(id)aConnection
 {
     var error,
         type = typeof(anException);

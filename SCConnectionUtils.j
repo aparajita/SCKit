@@ -9,6 +9,10 @@
  * http://www.opensource.org/licenses/MIT
 */
 
+@import <Foundation/CPString.j>
+@import <AppKit/CPAlert.j>
+
+
 @implementation SCConnectionUtils : CPObject
 
 /*!

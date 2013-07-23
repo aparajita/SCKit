@@ -10,9 +10,9 @@
 */
 
 @import <Foundation/CPJSONPConnection.j>
+@import <Foundation/CPURLRequest.j>
 
 @import "_SCConnection.j"
-@import "SCConnectionUtils.j"
 
 
 /*!

@@ -78,22 +78,22 @@ var DOMFixedWidthSpanElement    = nil,
 
 @implementation SCStyledTextField (Utils)
 
-+ (CGSize)sizeOfString:(CPString)aString withFont:(CPFont)aFont forWidth:(float)aWidth
++ (CGSize)sizeOfString:(CPString)aString withFont:(CPFont)font forWidth:(float)width
 {
     if (!DOMFixedWidthSpanElement)
         [self createDOMElements];
 
     var span;
 
-    if (!aWidth)
+    if (!width)
         span = DOMFlexibleWidthSpanElement;
     else
     {
         span = DOMFixedWidthSpanElement;
-        span.style.width = ROUND(aWidth) + "px";
+        span.style.width = ROUND(width) + "px";
     }
 
-    span.style.font = [(aFont || [CPFont systemFontOfSize:CPFontCurrentSystemSize]) cssString];
+    span.style.font = [(font || [CPFont systemFontOfSize:CPFontCurrentSystemSize]) cssString];
     span.innerHTML = aString;
 
     return CGSizeMake(span.clientWidth, span.clientHeight);
