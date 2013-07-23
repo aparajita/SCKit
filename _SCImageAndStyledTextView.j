@@ -11,6 +11,11 @@
 
 @import <AppKit/_CPImageAndTextView.j>
 
+@class SCStyledTextField
+
+@global _DOMTextElement
+@global _DOMTextShadowElement
+
 
 /*!
     The standard _CPImageAndTextView used by Cappuccino strips all html tags
@@ -23,6 +28,11 @@
 
 - (void)layoutSubviews
 {
+    // We have to set the innerHTML first so we can precalculate the formatted size.
+    // Otherwise _CPImageAndTextView will calculate the size based on the raw size
+    // of the html code.
+    _textSize = [SCStyledTextField sizeOfString:_text withFont:_font forWidth:CGRectGetWidth([self bounds])];
+
     [super layoutSubviews];
 
     if (_DOMTextElement)
